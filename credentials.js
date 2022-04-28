@@ -1,9 +1,9 @@
 var credentials = {
-    host: "localhost",
-    port: 3306,
+    host: 'localhost',
+    port: 3000,
     user: "root",
     password: "softeng",
-    database: "actual_total_load"
+    database: "agpt"
 }
 
 module.exports = credentials;
