@@ -26,7 +26,7 @@ const app = express()
 con.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
-  con.query("CREATE DATABASE IF NOT EXISTS AGPT", function (err, result) {
+  con.query("CREATE DATABASE IF NOT EXISTS agpt", function (err, result) {
     if (err) throw err;
     console.log("Database created");
   });
@@ -75,12 +75,12 @@ csvtojson().fromFile(fileName).then(source => {
             ResolutionCode = source[i]["ResolutionCode"],
             AreaName = source[i]["AreaName"],
             ProductionType = source[i]["ProductionType"],
-            ActualGenerationOutput = source[i]["ActualGenerationOutput"]
+            ActualGenerationOutput = source[i]["ActualGenerationOutput"],
             UpdateTime = source[i]["UpdateTime"]
 //console.log(iconv.decode(DateTime,'utf-8'));
 //console.log(typeof(DateTime))
     var insertStatement =
-    `INSERT INTO agpt values(?, ?, ?, ?,?)`;
+    `INSERT INTO AGPT values(?, ?, ?, ?,?,?)`;
     var items = [DateTime, ResolutionCode, AreaName, ProductionType,ActualGenerationOutput,UpdateTime];
     // Inserting data of current row
     // into database
