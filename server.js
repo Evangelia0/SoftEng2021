@@ -44,23 +44,23 @@ fs.createReadStream(fileName)
           var items = [row[0],row[1],row[5],row[6],row[7],row[7]];
           /*Inserting data of current row
           into database*/
-          // con.query(insertStatement, items, 
-          //     (err, results, fields) => {
-          //     if(err) throw err;
-          //     if (err.code === 'ER_DUP_ENTRY' || err.erno == 1062) {
-          //         let sql = `select * from ${name}`;
-          //         con.query(sql,function(err,res) {
-          //           if(err) throw err;
-          //           // console.log(res);
-          //           let newquery = `UPDATE ${name} 
-          //           SET (UpdateTime) values(?)`;
-          //           var update = row[7];
-          //           con.query(newquery,update,function(err) {
-          //             if(err) throw err;
-          //           })
-          //         })
-          //     }
-          // });
+          con.query(insertStatement, items, 
+              (err, results, fields) => {
+              if(err) throw err;
+              // if (err.code === 'ER_DUP_ENTRY' || err.erno == 1062) {
+              //     let sql = `select * from ${name}`;
+              //     con.query(sql,function(err,res) {
+              //       if(err) throw err;
+              //       // console.log(res);
+              //       let newquery = `UPDATE ${name} 
+              //       SET (UpdateTime) values(?)`;
+              //       var update = row[7];
+              //       con.query(newquery,update,function(err) {
+              //         if(err) throw err;
+              //       })
+              //     })
+              // }
+          });
         }
     })
   
