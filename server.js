@@ -23,31 +23,44 @@ connection(con);
 
 const fileName ='2022_01_01_01_ActualTotalLoad6.1.A.csv';
 const { parse } = require("csv-parse");
+const { CLIENT_IGNORE_SPACE } = require('mysql/lib/protocol/constants/client');
 
 fs.createReadStream(fileName)
   .pipe(parse({ delimiter: "\t", from_line: 2 }))
   .on("data", function (row) {
-    let name = row[5].replace("-","_");
-    //console.log(row[5].replace("-","_"));
-    con.query(totalload(name), function(err) {
-      if (err) {
-      throw err;
-      }
-      console.log(`table ${row[5]} created`)
-      });
+      // console.log(`table ${row[5]} created`)
+      
     if(row[3] === 'CTY'){
-      console.log(row[3])
+      var name = row[5].replace("-","_");
+    //console.log(row[5].replace("-","_"));
+      con.query(totalload(name), function(err) {
+        if (err) {
+        throw err;
+        }
+      });
       let insertStatement = 
-          `INSERT INTO ${name} values(?,?,?,?,?)`;
-          var items = [row[0],row[1],row[5],row[6],row[7]];
+          `INSERT INTO ${name} values(?,?,?,?,?)
+           ON DUPLICATE KEY UPDATE UpdateTime = ?`;
+          var items = [row[0],row[1],row[5],row[6],row[7],row[7]];
           /*Inserting data of current row
           into database*/
-          con.query(insertStatement, items, 
-              (err, results, fields) => {
-              if (err.code === 'ER_DUP_ENTRY' || err.erno == 1062) {
-                  if(row[7])
-              }
-          });
+          // con.query(insertStatement, items, 
+          //     (err, results, fields) => {
+          //     if(err) throw err;
+          //     if (err.code === 'ER_DUP_ENTRY' || err.erno == 1062) {
+          //         let sql = `select * from ${name}`;
+          //         con.query(sql,function(err,res) {
+          //           if(err) throw err;
+          //           // console.log(res);
+          //           let newquery = `UPDATE ${name} 
+          //           SET (UpdateTime) values(?)`;
+          //           var update = row[7];
+          //           con.query(newquery,update,function(err) {
+          //             if(err) throw err;
+          //           })
+          //         })
+          //     }
+          // });
         }
     })
   
