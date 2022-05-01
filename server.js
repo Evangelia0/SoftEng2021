@@ -28,60 +28,68 @@ const directoryPath = 'C:/Users/30694/Documents/GitHub/SoftEng2021_/docs/test'; 
 const { parse } = require("csv-parse");
 const { CLIENT_IGNORE_SPACE } = require('mysql/lib/protocol/constants/client');
 
-fs.readdir(directoryPath, function (err, files) {
-    //handling error
-    //console.log(directoryPath);
-    if (err) {
-        return console.log('Unable to scan directory: ' + err);
-    }
-    //listing all files using forEach
-    files.forEach(function (file) {
-        const filePath = path.join(directoryPath, file);
-        fs.createReadStream(filePath)
-            .pipe(parse({ delimiter: "\t", from_line: 2 }))
-            .on("data", function (row) {
-                // console.log(`table ${row[5]} created`)
+setTimeout(readfiles, 1000);
 
-                if(row[3] === 'CTY'){
-                    var name = row[5].replace("-","_");
-                    //console.log(row[5].replace("-","_"));
-                    con.query(totalload(name), function(err) {
-                        if (err) {
-                            throw err;
-                        }
-                    });
-                    let insertStatement =
-                        `INSERT INTO ${name} values(?,?,?,?,?)
-           ON DUPLICATE KEY UPDATE UpdateTime = ?`;
-                    var items = [row[0],row[1],row[5],row[6],row[7],row[7]];
-                    /*Inserting data of current row
-                    into database*/
-                    con.query(insertStatement, items,
-                        (err, results, fields) => {
-                            if(err) throw err;
-                            // if (err.code === 'ER_DUP_ENTRY' || err.erno == 1062) {
-                            //     let sql = `select * from ${name}`;
-                            //     con.query(sql,function(err,res) {
-                            //       if(err) throw err;
-                            //       // console.log(res);
-                            //       let newquery = `UPDATE ${name}
-                            //       SET (UpdateTime) values(?)`;
-                            //       var update = row[7];
-                            //       con.query(newquery,update,function(err) {
-                            //         if(err) throw err;
-                            //       })
-                            //     })
-                            // }
+function readfiles(){
+    fs.readdir(directoryPath, function (err, files) {
+        //handling error
+        //console.log(directoryPath);
+        if (err) {
+            return console.log('Unable to scan directory: ' + err);
+        }
+        //listing all files using forEach
+        files.forEach(function (file) {
+            const filePath = path.join(directoryPath, file);
+            fs.createReadStream(filePath)
+                .pipe(parse({ delimiter: "\t", from_line: 2 }))
+                .on("data", function (row) {
+                    // console.log(`table ${row[5]} created`)
+
+                    if(row[3] === 'CTY'){
+                        var name = row[5].replace("-","_");
+                        //console.log(row[5].replace("-","_"));
+                        con.query(totalload(name), function(err) {
+                            if (err) {
+                                throw err;
+                            }
                         });
-                }
-            }).on("end", function () {
-               console.log("file finished");
-             })
-             .on("error", function (error) {
-               console.log(error.message);
-            });
+                        let insertStatement =
+                            `INSERT INTO ${name} values(?,?,?,?,?)
+           ON DUPLICATE KEY UPDATE UpdateTime = ?`;
+                        var items = [row[0],row[1],row[5],row[6],row[7],row[7]];
+                        /*Inserting data of current row
+                        into database*/
+                        con.query(insertStatement, items,
+                            (err, results, fields) => {
+                                if(err) throw err;
+                                // if (err.code === 'ER_DUP_ENTRY' || err.erno == 1062) {
+                                //     let sql = `select * from ${name}`;
+                                //     con.query(sql,function(err,res) {
+                                //       if(err) throw err;
+                                //       // console.log(res);
+                                //       let newquery = `UPDATE ${name}
+                                //       SET (UpdateTime) values(?)`;
+                                //       var update = row[7];
+                                //       con.query(newquery,update,function(err) {
+                                //         if(err) throw err;
+                                //       })
+                                //     })
+                                // }
+                            });
+                    }
+                }).on("end", function () {
+                console.log("file finished");
+            })
+                .on("error", function (error) {
+                    console.log(error.message);
+                });
+        });
     });
-});
+}
+
+
+
+
 
 
 
